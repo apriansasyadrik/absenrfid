@@ -92,9 +92,13 @@ class Auth extends CI_Controller {
                 redirect('dashboard');
                 break;
             case 'guru':
-            case 'walikelas':
-            case 'guru_piket':
                 redirect('guru/dashboard');
+                break;
+            case 'walikelas':
+                redirect('walikelas/dashboard');
+                break;
+            case 'guru_piket':
+                redirect('piket/dashboard');
                 break;
             case 'bk':
                 redirect('bk/dashboard');

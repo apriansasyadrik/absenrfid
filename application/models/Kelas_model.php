@@ -91,4 +91,18 @@ class Kelas_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    /**
+     * Get class by walikelas (guru_id)
+     */
+    public function get_by_walikelas($guru_id) {
+        $this->db->select('kelas.*, guru.nama as nama_walikelas, tahun_ajaran.tahun_ajaran');
+        $this->db->from('kelas');
+        $this->db->join('guru', 'guru.id = kelas.walikelas_id', 'left');
+        $this->db->join('tahun_ajaran', 'tahun_ajaran.id = kelas.tahun_ajaran_id');
+        $this->db->where('kelas.walikelas_id', $guru_id);
+        
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
