@@ -19,8 +19,8 @@ $route['auth/do_login'] = 'auth/do_login';
 $route['dashboard'] = 'dashboard';
 $route['admin/dashboard'] = 'dashboard';
 $route['guru/dashboard'] = 'guru/dashboard';
-$route['walikelas/dashboard'] = 'guru/dashboard';
-$route['piket/dashboard'] = 'guru/dashboard';
+$route['walikelas/dashboard'] = 'walikelas/dashboard';
+$route['piket/dashboard'] = 'piket/dashboard';
 $route['bk/dashboard'] = 'bk/dashboard';
 
 // Admin routes
@@ -47,15 +47,23 @@ $route['guru/rekap'] = 'guru/rekap';
 $route['guru/profile'] = 'guru/profile';
 
 // Walikelas routes
+$route['walikelas'] = 'walikelas/dashboard';
 $route['walikelas/izin-siswa'] = 'walikelas/izinsiswa';
+$route['walikelas/izin-siswa/(:any)'] = 'walikelas/izinsiswa/$1';
 
 // Piket routes
+$route['piket'] = 'piket/dashboard';
 $route['piket/izin-kbm'] = 'piket/izinkbm';
+$route['piket/izin-kbm/(:any)'] = 'piket/izinkbm/$1';
 $route['piket/rekap'] = 'piket/rekap';
+$route['piket/rekap/(:any)'] = 'piket/rekap/$1';
 
 // BK routes
+$route['bk'] = 'bk/dashboard';
 $route['bk/monitoring'] = 'bk/monitoring';
+$route['bk/monitoring/(:any)'] = 'bk/monitoring/$1';
 $route['bk/surat'] = 'bk/surat';
+$route['bk/surat/(:any)'] = 'bk/surat/$1';
 $route['bk/profile'] = 'bk/profile';
 
 // Absensi RFID (tanpa login)
