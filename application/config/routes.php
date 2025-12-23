@@ -19,8 +19,8 @@ $route['auth/do_login'] = 'auth/do_login';
 $route['dashboard'] = 'dashboard';
 $route['admin/dashboard'] = 'dashboard';
 $route['guru/dashboard'] = 'guru/dashboard';
-$route['walikelas/dashboard'] = 'guru/dashboard';
-$route['piket/dashboard'] = 'guru/dashboard';
+$route['walikelas/dashboard'] = 'walikelas/dashboard';
+$route['piket/dashboard'] = 'piket/dashboard';
 $route['bk/dashboard'] = 'bk/dashboard';
 
 // Admin routes
@@ -46,16 +46,40 @@ $route['guru/laporan'] = 'guru/laporan';
 $route['guru/rekap'] = 'guru/rekap';
 $route['guru/profile'] = 'guru/profile';
 
-// Walikelas routes
-$route['walikelas/izin-siswa'] = 'walikelas/izinsiswa';
+// ============ WALIKELAS ROUTES ============
+$route['walikelas'] = 'walikelas/dashboard';
+$route['walikelas/dashboard'] = 'walikelas/dashboard';
+$route['walikelas/izin'] = 'walikelas/izinsiswa';
+$route['walikelas/izin/tambah'] = 'walikelas/izinsiswa/tambah';
+$route['walikelas/izin/edit/(:num)'] = 'walikelas/izinsiswa/edit/$1';
+$route['walikelas/izin/hapus/(:num)'] = 'walikelas/izinsiswa/hapus/$1';
+$route['walikelas/izin/(:any)'] = 'walikelas/izinsiswa/$1';
 
-// Piket routes
-$route['piket/izin-kbm'] = 'piket/izinkbm';
+// ============ PIKET ROUTES ============
+$route['piket'] = 'piket/dashboard';
+$route['piket/dashboard'] = 'piket/dashboard';
+$route['piket/izin'] = 'piket/izinkbm';
+$route['piket/izin/tambah'] = 'piket/izinkbm/tambah';
+$route['piket/izin/edit/(:num)'] = 'piket/izinkbm/edit/$1';
+$route['piket/izin/hapus/(:num)'] = 'piket/izinkbm/hapus/$1';
+$route['piket/izin/(:any)'] = 'piket/izinkbm/$1';
 $route['piket/rekap'] = 'piket/rekap';
+$route['piket/rekap/export'] = 'piket/rekap/export';
+$route['piket/rekap/(:any)'] = 'piket/rekap/$1';
 
-// BK routes
+// ============ BK ROUTES ============
+$route['bk'] = 'bk/dashboard';
+$route['bk/dashboard'] = 'bk/dashboard';
 $route['bk/monitoring'] = 'bk/monitoring';
+$route['bk/monitoring/detail/(:num)'] = 'bk/monitoring/detail/$1';
+$route['bk/monitoring/catatan/(:num)'] = 'bk/monitoring/catatan/$1';
+$route['bk/monitoring/(:any)'] = 'bk/monitoring/$1';
 $route['bk/surat'] = 'bk/surat';
+$route['bk/surat/tambah'] = 'bk/surat/tambah';
+$route['bk/surat/edit/(:num)'] = 'bk/surat/edit/$1';
+$route['bk/surat/cetak/(:num)'] = 'bk/surat/cetak/$1';
+$route['bk/surat/hapus/(:num)'] = 'bk/surat/hapus/$1';
+$route['bk/surat/(:any)'] = 'bk/surat/$1';
 $route['bk/profile'] = 'bk/profile';
 
 // Absensi RFID (tanpa login)
