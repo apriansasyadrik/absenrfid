@@ -11,9 +11,9 @@ class TahunAjaran_model extends CI_Model {
      * Get all academic years
      */
     public function get_all() {
-        $this->db->order_by('tahun_ajaran', 'DESC');
+        $this->db->order_by('tahun_mulai', 'DESC');
         $query = $this->db->get('tahun_ajaran');
-        return $query->result_array();
+        return $query->result();
     }
 
     /**
@@ -22,7 +22,7 @@ class TahunAjaran_model extends CI_Model {
     public function get_by_id($id) {
         $this->db->where('id', $id);
         $query = $this->db->get('tahun_ajaran');
-        return $query->row_array();
+        return $query->row();
     }
 
     /**
@@ -32,7 +32,14 @@ class TahunAjaran_model extends CI_Model {
         $this->db->where('is_active', 1);
         $this->db->limit(1);
         $query = $this->db->get('tahun_ajaran');
-        return $query->row_array();
+        return $query->row();
+    }
+
+    /**
+     * Deactivate all academic years
+     */
+    public function deactivate_all() {
+        return $this->db->update('tahun_ajaran', array('is_active' => 0));
     }
 
     /**
@@ -74,13 +81,13 @@ class TahunAjaran_model extends CI_Model {
      * Get for dropdown
      */
     public function get_dropdown() {
-        $this->db->select('id, tahun_ajaran');
-        $this->db->order_by('tahun_ajaran', 'DESC');
+        $this->db->select('id, nama_tahun');
+        $this->db->order_by('tahun_mulai', 'DESC');
         $query = $this->db->get('tahun_ajaran');
         
         $result = array();
-        foreach ($query->result_array() as $row) {
-            $result[$row['id']] = $row['tahun_ajaran'];
+        foreach ($query->result() as $row) {
+            $result[$row->id] = $row->nama_tahun;
         }
         
         return $result;
