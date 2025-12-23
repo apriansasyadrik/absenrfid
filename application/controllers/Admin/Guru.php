@@ -159,6 +159,85 @@ class Guru extends CI_Controller {
     }
 
     /**
+     * Import from Excel
+     */
+    public function import() {
+        if (empty($_FILES['file']['name'])) {
+            $this->session->set_flashdata('error', 'File tidak boleh kosong');
+            redirect('admin/guru');
+            return;
+        }
+
+        $config['upload_path'] = './assets/uploads/import/';
+        $config['allowed_types'] = 'xlsx|xls';
+        $config['max_size'] = 10240; // 10MB
+        $config['encrypt_name'] = TRUE;
+
+        $this->upload->initialize($config);
+
+        if ($this->upload->do_upload('file')) {
+            $file_data = $this->upload->data();
+            $file_path = './assets/uploads/import/' . $file_data['file_name'];
+
+            try {
+                require_once FCPATH . 'vendor/autoload.php';
+                
+                $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_path);
+                $sheet = $spreadsheet->getActiveSheet();
+                $rows = $sheet->toArray();
+
+                $success = 0;
+                $failed = 0;
+
+                // Skip header row
+                for ($i = 1; $i < count($rows); $i++) {
+                    $row = $rows[$i];
+                    
+                    // Skip empty rows
+                    if (empty($row[0]) && empty($row[2])) continue;
+
+                    $data = array(
+                        'nip' => $row[0],
+                        'rfid_uid' => $row[1],
+                        'nama' => $row[2],
+                        'jenis_kelamin' => $row[3],
+                        'tempat_lahir' => $row[4],
+                        'tanggal_lahir' => $row[5],
+                        'alamat' => $row[6],
+                        'no_hp' => $row[7],
+                        'email' => $row[8],
+                        'jabatan' => $row[9],
+                        'is_active' => 1
+                    );
+
+                    // Check if NIP already exists (if NIP is provided)
+                    if (!empty($data['nip']) && $this->Guru_model->is_nip_exists($data['nip'])) {
+                        $failed++;
+                        continue;
+                    }
+
+                    if ($this->Guru_model->insert($data)) {
+                        $success++;
+                    } else {
+                        $failed++;
+                    }
+                }
+
+                // Delete uploaded file
+                unlink($file_path);
+
+                $this->session->set_flashdata('success', "Import berhasil. $success data ditambahkan, $failed gagal/duplikat");
+            } catch (Exception $e) {
+                $this->session->set_flashdata('error', 'Error: ' . $e->getMessage());
+            }
+        } else {
+            $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+        }
+
+        redirect('admin/guru');
+    }
+
+    /**
      * Export to Excel
      */
     public function export() {

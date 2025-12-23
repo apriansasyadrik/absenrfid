@@ -8,6 +8,9 @@
                 <p class="text-gray-600 mt-1">Kelola data guru, staff, dan RFID</p>
             </div>
             <div class="flex space-x-2">
+                <button onclick="showImportModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+                    <i class="fas fa-file-import mr-2"></i>Import Excel
+                </button>
                 <a href="<?= base_url('admin/guru/export') ?>" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
                     <i class="fas fa-file-export mr-2"></i>Export Excel
                 </a>
@@ -96,6 +99,53 @@
                 </table>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div id="importModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold">Import Data Guru dari Excel</h3>
+            <button onclick="closeImportModal()" class="text-gray-600 hover:text-gray-900">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        
+        <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700">
+            <p class="font-medium mb-2">Format Excel:</p>
+            <ul class="text-sm space-y-1 ml-4 list-disc">
+                <li>Kolom A: NIP</li>
+                <li>Kolom B: RFID UID</li>
+                <li>Kolom C: Nama Lengkap</li>
+                <li>Kolom D: Jenis Kelamin (L/P)</li>
+                <li>Kolom E: Tempat Lahir</li>
+                <li>Kolom F: Tanggal Lahir (YYYY-MM-DD)</li>
+                <li>Kolom G: Alamat</li>
+                <li>Kolom H: No HP</li>
+                <li>Kolom I: Email</li>
+                <li>Kolom J: Jabatan</li>
+            </ul>
+            <p class="text-sm mt-2">* Baris pertama adalah header (akan diskip)</p>
+            <p class="text-sm">* Data yang NIP-nya sudah ada akan diabaikan</p>
+        </div>
+        
+        <form action="<?= base_url('admin/guru/import') ?>" method="post" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-medium mb-2">Pilih File Excel</label>
+                <input type="file" name="file" accept=".xlsx,.xls" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-xs text-gray-500 mt-1">Format: .xlsx atau .xls, Max: 10MB</p>
+            </div>
+            
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="closeImportModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">
+                    Batal
+                </button>
+                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    <i class="fas fa-upload mr-2"></i>Upload & Import
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -199,6 +249,14 @@
 </div>
 
 <script>
+function showImportModal() {
+    document.getElementById('importModal').classList.remove('hidden');
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').classList.add('hidden');
+}
+
 function showAddModal() {
     document.getElementById('modalTitle').textContent = 'Tambah Guru';
     document.getElementById('guruForm').reset();
