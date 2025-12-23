@@ -35,8 +35,10 @@ class IzinSiswa_model extends CI_Model {
         }
         
         if (isset($filters['bulan']) && isset($filters['tahun'])) {
-            $this->db->where('MONTH(izin_siswa.tanggal)', $filters['bulan']);
-            $this->db->where('YEAR(izin_siswa.tanggal)', $filters['tahun']);
+            $start_date = $filters['tahun'] . '-' . str_pad($filters['bulan'], 2, '0', STR_PAD_LEFT) . '-01';
+            $end_date = date('Y-m-t', strtotime($start_date));
+            $this->db->where('izin_siswa.tanggal >=', $start_date);
+            $this->db->where('izin_siswa.tanggal <=', $end_date);
         }
         
         $this->db->order_by('izin_siswa.tanggal', 'DESC');
@@ -122,8 +124,10 @@ class IzinSiswa_model extends CI_Model {
         $this->db->where('guru_id', $guru_id);
         
         if ($bulan && $tahun) {
-            $this->db->where('MONTH(tanggal)', $bulan);
-            $this->db->where('YEAR(tanggal)', $tahun);
+            $start_date = $tahun . '-' . str_pad($bulan, 2, '0', STR_PAD_LEFT) . '-01';
+            $end_date = date('Y-m-t', strtotime($start_date));
+            $this->db->where('tanggal >=', $start_date);
+            $this->db->where('tanggal <=', $end_date);
         }
         
         return $this->db->count_all_results('izin_siswa');
@@ -138,8 +142,10 @@ class IzinSiswa_model extends CI_Model {
         $this->db->where('guru_id', $guru_id);
         
         if ($bulan && $tahun) {
-            $this->db->where('MONTH(tanggal)', $bulan);
-            $this->db->where('YEAR(tanggal)', $tahun);
+            $start_date = $tahun . '-' . str_pad($bulan, 2, '0', STR_PAD_LEFT) . '-01';
+            $end_date = date('Y-m-t', strtotime($start_date));
+            $this->db->where('tanggal >=', $start_date);
+            $this->db->where('tanggal <=', $end_date);
         }
         
         $this->db->group_by('jenis');

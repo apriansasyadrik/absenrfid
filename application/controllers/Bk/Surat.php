@@ -51,7 +51,12 @@ class Surat extends CI_Controller {
         $data['siswa_list'] = $query->result_array();
         
         // Generate nomor surat
-        $data['nomor_surat'] = generate_nomor_surat('BK');
+        try {
+            $data['nomor_surat'] = generate_nomor_surat('BK');
+        } catch (Exception $e) {
+            // Fallback to default format if generation fails
+            $data['nomor_surat'] = '001/BK/' . date('m') . '/' . date('Y');
+        }
         
         $data['title'] = 'Buat Surat Panggilan';
         $this->load->view('templates/header', $data);

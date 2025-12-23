@@ -71,10 +71,9 @@
     </li>
 
     <?php 
-    // Check if also walikelas
-    $guru_id = $this->session->userdata('guru_id');
-    $this->db->where('wali_kelas_id', $guru_id);
-    $is_walikelas = $this->db->count_all_results('kelas') > 0;
+    // Check if user role includes walikelas
+    $role = $this->session->userdata('role');
+    $is_walikelas = ($role == 'walikelas');
     ?>
 
     <?php if ($is_walikelas): ?>

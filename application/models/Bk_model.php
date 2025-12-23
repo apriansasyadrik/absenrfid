@@ -86,8 +86,10 @@ class Bk_model extends CI_Model {
         $this->db->join('guru', 'guru.id = surat_bk.bk_id');
         
         if (isset($filters['bulan']) && isset($filters['tahun'])) {
-            $this->db->where('MONTH(surat_bk.tanggal)', $filters['bulan']);
-            $this->db->where('YEAR(surat_bk.tanggal)', $filters['tahun']);
+            $start_date = $filters['tahun'] . '-' . str_pad($filters['bulan'], 2, '0', STR_PAD_LEFT) . '-01';
+            $end_date = date('Y-m-t', strtotime($start_date));
+            $this->db->where('surat_bk.tanggal >=', $start_date);
+            $this->db->where('surat_bk.tanggal <=', $end_date);
         }
         
         if (isset($filters['siswa_id'])) {
@@ -169,8 +171,10 @@ class Bk_model extends CI_Model {
         $stats['terlambat_tinggi'] = $this->db->count_all_results('monitoring_bk');
         
         // Surat bulan ini
-        $this->db->where('MONTH(tanggal)', $bulan);
-        $this->db->where('YEAR(tanggal)', $tahun);
+        $start_date = $tahun . '-' . str_pad($bulan, 2, '0', STR_PAD_LEFT) . '-01';
+        $end_date = date('Y-m-t', strtotime($start_date));
+        $this->db->where('tanggal >=', $start_date);
+        $this->db->where('tanggal <=', $end_date);
         $stats['surat_bulan_ini'] = $this->db->count_all_results('surat_bk');
         
         return $stats;

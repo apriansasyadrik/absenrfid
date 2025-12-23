@@ -43,7 +43,7 @@ class Rekap extends CI_Controller {
     }
 
     /**
-     * Export rekap to Excel
+     * Export rekap to CSV
      */
     public function export() {
         $start_date = $this->input->get('start_date') ?: date('Y-m-01');
