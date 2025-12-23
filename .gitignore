@@ -1,0 +1,39 @@
+# CodeIgniter
+/system/
+application/cache/*
+!application/cache/index.html
+application/logs/*
+!application/logs/index.html
+
+# Composer
+/vendor/
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+
+# Uploads
+assets/uploads/logo/*
+assets/uploads/foto_siswa/*
+assets/uploads/foto_guru/*
+assets/uploads/import/*
+!assets/uploads/*/.gitkeep
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Build files
+dist/
+build/
