@@ -1,0 +1,16 @@
+{
+    "name": "apriansasyadrik/absenrfid",
+    "description": "Sistem Absensi RFID untuk Siswa dan Guru",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2",
+        "phpoffice/phpspreadsheet": "^1.28",
+        "tecnickcom/tcpdf": "^6.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "application/"
+        }
+    }
+}
