@@ -484,6 +484,29 @@ CREATE TABLE `izin_kbm` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =====================================================
+-- TABEL SURAT_PANGGILAN - Surat Panggilan Orang Tua (BK)
+-- =====================================================
+CREATE TABLE `surat_panggilan` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `siswa_id` int(11) NOT NULL,
+  `nomor_surat` varchar(100) NOT NULL,
+  `tanggal_surat` date NOT NULL,
+  `waktu_panggilan` datetime NOT NULL,
+  `perihal` text NOT NULL,
+  `keterangan` text,
+  `status` enum('Belum Dipanggil','Sudah Dipanggil','Hadir','Tidak Hadir') DEFAULT 'Belum Dipanggil',
+  `created_by` int(11) NOT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `siswa_id` (`siswa_id`),
+  KEY `created_by` (`created_by`),
+  KEY `idx_tanggal` (`tanggal_surat`),
+  CONSTRAINT `fk_surat_siswa` FOREIGN KEY (`siswa_id`) REFERENCES `siswa` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_surat_user` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =====================================================
 -- INDEXES untuk optimasi
 -- =====================================================
 ALTER TABLE `kelas` ADD CONSTRAINT `fk_kelas_walikelas` FOREIGN KEY (`walikelas_id`) REFERENCES `guru` (`id`) ON DELETE SET NULL;
