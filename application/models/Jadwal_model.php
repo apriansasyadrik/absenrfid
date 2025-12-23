@@ -143,4 +143,105 @@ class Jadwal_model extends CI_Model {
         
         return $this->db->get()->result();
     }
+
+    public function get_by_teacher_date($guru_id, $tanggal) {
+        $hari = date('l', strtotime($tanggal));
+        
+        // Convert English day to Indonesian
+        $hari_map = [
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sunday' => 'Minggu'
+        ];
+        
+        $hari_indo = isset($hari_map[$hari]) ? $hari_map[$hari] : $hari;
+        
+        $this->db->select('jp.*, 
+            CONCAT(k.tingkat, " ", k.nama_kelas) as kelas_nama,
+            k.id as kelas_id,
+            mp.nama_mapel as mapel_nama');
+        $this->db->from($this->table . ' jp');
+        $this->db->join('kelas k', 'k.id = jp.kelas_id', 'left');
+        $this->db->join('mata_pelajaran mp', 'mp.id = jp.mapel_id', 'left');
+        $this->db->where('jp.guru_id', $guru_id);
+        $this->db->where('jp.hari', $hari_indo);
+        $this->db->order_by('jp.jam_mulai', 'ASC');
+        
+        return $this->db->get()->result();
+    }
+
+    public function get_by_class_date($kelas_id, $tanggal) {
+        $hari = date('l', strtotime($tanggal));
+        
+        // Convert English day to Indonesian
+        $hari_map = [
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sunday' => 'Minggu'
+        ];
+        
+        $hari_indo = isset($hari_map[$hari]) ? $hari_map[$hari] : $hari;
+        
+        $this->db->select('jp.*, 
+            mp.nama_mapel as mapel_nama,
+            g.nama as guru_nama');
+        $this->db->from($this->table . ' jp');
+        $this->db->join('mata_pelajaran mp', 'mp.id = jp.mapel_id', 'left');
+        $this->db->join('guru g', 'g.id = jp.guru_id', 'left');
+        $this->db->where('jp.kelas_id', $kelas_id);
+        $this->db->where('jp.hari', $hari_indo);
+        $this->db->order_by('jp.jam_mulai', 'ASC');
+        
+        return $this->db->get()->result();
+    }
+
+    public function count_classes_by_teacher($guru_id) {
+        $this->db->select('DISTINCT kelas_id');
+        $this->db->where('guru_id', $guru_id);
+        return $this->db->count_all_results($this->table);
+    }
+
+    public function get_next_class($guru_id) {
+        $now = date('H:i:s');
+        $hari = date('l');
+        
+        // Convert English day to Indonesian
+        $hari_map = [
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+            'Sunday' => 'Minggu'
+        ];
+        
+        $hari_indo = isset($hari_map[$hari]) ? $hari_map[$hari] : $hari;
+        
+        $this->db->select('jp.*, 
+            CONCAT(k.tingkat, " ", k.nama_kelas) as kelas_nama,
+            mp.nama_mapel as mapel_nama');
+        $this->db->from($this->table . ' jp');
+        $this->db->join('kelas k', 'k.id = jp.kelas_id', 'left');
+        $this->db->join('mata_pelajaran mp', 'mp.id = jp.mapel_id', 'left');
+        $this->db->where('jp.guru_id', $guru_id);
+        $this->db->where('jp.hari', $hari_indo);
+        $this->db->where('jp.jam_mulai >', $now);
+        $this->db->order_by('jp.jam_mulai', 'ASC');
+        $this->db->limit(1);
+        
+        return $this->db->get()->row();
+    }
+
+    public function get($id) {
+        return $this->get_by_id($id);
+    }
 }

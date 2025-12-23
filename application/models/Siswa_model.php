@@ -93,6 +93,12 @@ class Siswa_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function count_by_kelas($kelas_id) {
+        $this->db->where('kelas_id', $kelas_id);
+        $this->db->where('is_active', 1);
+        return $this->db->count_all_results('siswa');
+    }
+
     /**
      * Insert new student
      */
