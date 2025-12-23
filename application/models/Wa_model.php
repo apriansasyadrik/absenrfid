@@ -65,11 +65,26 @@ class Wa_model extends CI_Model {
      * Get WhatsApp settings
      */
     public function get_settings() {
-        $this->db->where('is_active', 1);
         $this->db->limit(1);
         $query = $this->db->get('wa_settings');
 
-        return $query->row_array();
+        return $query->row();
+    }
+
+    /**
+     * Update WhatsApp settings
+     */
+    public function update_settings($data) {
+        // Check if settings exist
+        $query = $this->db->get('wa_settings');
+        
+        if ($query->num_rows() > 0) {
+            $row = $query->row();
+            $this->db->where('id', $row->id);
+            return $this->db->update('wa_settings', $data);
+        } else {
+            return $this->db->insert('wa_settings', $data);
+        }
     }
 
     /**
@@ -87,18 +102,98 @@ class Wa_model extends CI_Model {
     /**
      * Get all templates
      */
-    public function get_all_templates() {
+    public function get_templates() {
         $this->db->order_by('tipe', 'ASC');
         $query = $this->db->get('wa_templates');
-        return $query->result_array();
+        return $query->result();
     }
 
     /**
-     * Update template
+     * Update template by type
      */
-    public function update_template($id, $data) {
-        $this->db->where('id', $id);
+    public function update_template($tipe, $template) {
+        $this->db->where('tipe', $tipe);
+        $data = ['template' => $template];
         return $this->db->update('wa_templates', $data);
+    }
+
+    /**
+     * Get active classes for notification
+     */
+    public function get_active_classes() {
+        $this->db->select('kelas_id');
+        $this->db->from('wa_kelas_aktif');
+        $this->db->where('is_active', 1);
+        $result = $this->db->get()->result();
+        
+        $ids = [];
+        foreach ($result as $row) {
+            $ids[] = $row->kelas_id;
+        }
+        return $ids;
+    }
+
+    /**
+     * Update active classes
+     */
+    public function update_active_classes($kelas_ids) {
+        // Deactivate all first
+        $this->db->update('wa_kelas_aktif', ['is_active' => 0]);
+        
+        // Activate selected classes
+        if (!empty($kelas_ids)) {
+            foreach ($kelas_ids as $kelas_id) {
+                // Check if exists
+                $this->db->where('kelas_id', $kelas_id);
+                $query = $this->db->get('wa_kelas_aktif');
+                
+                if ($query->num_rows() > 0) {
+                    // Update to active
+                    $this->db->where('kelas_id', $kelas_id);
+                    $this->db->update('wa_kelas_aktif', ['is_active' => 1]);
+                } else {
+                    // Insert new
+                    $this->db->insert('wa_kelas_aktif', [
+                        'kelas_id' => $kelas_id,
+                        'is_active' => 1
+                    ]);
+                }
+            }
+        }
+        
+        return true;
+    }
+
+    /**
+     * Get queue statistics
+     */
+    public function get_queue_stats() {
+        $stats = [];
+        
+        // Pending
+        $this->db->where('status', 'pending');
+        $stats['pending'] = $this->db->count_all_results('wa_queue');
+        
+        // Sent
+        $this->db->where('status', 'sent');
+        $stats['sent'] = $this->db->count_all_results('wa_queue');
+        
+        // Failed
+        $this->db->where('status', 'failed');
+        $stats['failed'] = $this->db->count_all_results('wa_queue');
+        
+        // Total
+        $stats['total'] = $this->db->count_all('wa_queue');
+        
+        return $stats;
+    }
+
+    /**
+     * Clear failed queue
+     */
+    public function clear_failed_queue() {
+        $this->db->where('status', 'failed');
+        return $this->db->delete('wa_queue');
     }
 
     /**
